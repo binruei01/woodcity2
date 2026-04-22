@@ -7,22 +7,14 @@ import {viteSingleFile} from 'vite-plugin-singlefile';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
+    base: './', // 確保在 GitHub Pages 的子目錄下能正確讀取資源
     plugins: [
       react(), 
-      tailwindcss(), 
-      viteSingleFile({ useRecommendedBuildConfig: true, removeViteModuleLoader: true })
+      tailwindcss(),
     ],
     build: {
-      target: 'es2015',
-      cssCodeSplit: false,
-      assetsInlineLimit: 100000000,
-      minify: 'terser',
-      terserOptions: {
-        format: {
-          comments: false,
-          max_line_len: 200, // 更嚴格限制單行長度，解決 GAS 語法解析錯誤
-        },
-      },
+      target: 'esnext',
+      minify: 'esbuild',
     },
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
